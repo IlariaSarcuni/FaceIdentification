@@ -1,0 +1,54 @@
+function se=sellion_estimation(lm, X,Y,Z,K)
+
+
+% 1. Calcola la linea mediana (colonna centrale)
+[nRows, nCols] = size(X);
+[~, col_med] = min(abs(mean(X,1) - mean(X(:))));
+X_med = X(:, col_med);
+Y_med = Y(:, col_med);
+Z_med = Z(:, col_med);
+K_med = K(:, col_med);
+
+% 2. Trova i landmark delle sopracciglia interne e occhi interni
+idx_iebsx = find(strcmp(lm.Acronym, 'iebsx'));
+idx_iebdx = find(strcmp(lm.Acronym, 'iebdx'));
+idx_ensx  = find(strcmp(lm.Acronym, 'ensx'));
+idx_endx  = find(strcmp(lm.Acronym, 'endx'));
+
+ymin = min([lm.cord_Y([idx_iebsx, idx_iebdx, idx_ensx, idx_endx])]);
+ymax = max([lm.cord_Y([idx_iebsx, idx_iebdx, idx_ensx, idx_endx])]);
+xmin=X_med;
+xmax = X_med;
+
+
+% Trova gli indici delle righe e colonne che cadono nella bounding box
+rows = find(any(Y >= ymin & Y <= ymax, 2));
+cols = find(any(X >= xmin & X <= xmax, 1));
+mask = X >= xmin & X <= xmax & Y >= ymin & Y <= ymax;
+K_bbox = K;
+K_bbox(~mask) = NaN;  % Imposta a NaN i punti fuori dalla bounding box
+
+
+% Trova il minimo e la sua posizione
+
+
+indice=find(K_bbox==max(K_bbox(K_bbox<0)),1);
+%indice=find(K_bbox==min(abs(K_bbox)));
+[row_min, col_min]= ind2sub(size(K_bbox),indice);
+
+
+
+% Ottieni le coordinate x e y corrispondenti
+x_min = X(row_min, col_min);
+y_min = Y(row_min, col_min);
+z_min = Z(row_min, col_min);
+Sellion_X = x_min;
+Sellion_Y = y_min;
+Sellion_Z = z_min;
+
+%se=[mean(Sellion_X(:)), mean(Sellion_Y(:)), mean(Sellion_Z(:))];
+se=[Sellion_X, Sellion_Y, Sellion_Z];
+
+
+end
+
