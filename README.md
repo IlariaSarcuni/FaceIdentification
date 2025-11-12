@@ -43,7 +43,7 @@ The interface allows users to:
 - **Healthcare workflow automation and security**.  
 
 ## Technologies
-- **Languages:** Python, C#  
+- **Languages:** Python, Matlab 
 - **Libraries:** scikit-learn, NumPy, OpenCV, MediaPipe  
 - **Tools:** Unity (2022.3), Intel RealSense SDK, Blender  
 
